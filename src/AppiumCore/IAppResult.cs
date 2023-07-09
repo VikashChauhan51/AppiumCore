@@ -1,16 +1,14 @@
 ﻿using OpenQA.Selenium.Interactions.Internal;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 
-namespace AppiumCore
-{
+
+namespace AppiumCore;
+
 	/// <summary>
 	/// Result return by app query
 	/// </summary>
-     public interface IAppResult
-    {
+ public interface IAppResult
+{
 		 string Id { get; }
 		 string Text { get; }
 		 string Name { get; }
@@ -29,4 +27,3 @@ namespace AppiumCore
 		 string GetCssValue(string propertyName);
 		 string GetProperty(string propertyName);
 	}
-}
