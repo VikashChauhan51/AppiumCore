@@ -1,15 +1,5 @@
-# AppiumCore
-This is a Appium wrapper to test cross platform mobile application with same code base using Appium C#.
-
-
-## Quick Start Example (Nunit Framework):
-
-```C#
-
-using NUnit.Framework;
-using OpenQA.Selenium.Appium;
-using OpenQA.Selenium.Appium.Service;
-using AppiumCore;
+﻿
+namespace AppiumCore.Test;
 
 [TestFixture(Platform.iOS)]
 [TestFixture(Platform.Android)]
@@ -42,8 +32,3 @@ public class AppSetupTest
         Assert.Pass();
     }
 }
-
-```
-
-## Reference
-- Inspired from [Xamarin.UITest](https://learn.microsoft.com/en-us/appcenter/test-cloud/frameworks/uitest/).
