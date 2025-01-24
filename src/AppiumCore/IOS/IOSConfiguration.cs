@@ -7,12 +7,7 @@ namespace AppiumCore.IOS;
 public class IOSConfiguration
 {
     private TimeSpan m_implicitWait;
-    private static readonly TimeSpan DEFAULT_TIMEOUT;
-
-    static IOSConfiguration()
-    {
-        DEFAULT_TIMEOUT = TimeSpan.FromSeconds(180);
-    }
+    private static readonly TimeSpan DEFAULT_TIMEOUT = TimeSpan.FromSeconds(180);
     public IOSConfiguration()
     {
         m_implicitWait = DEFAULT_TIMEOUT;

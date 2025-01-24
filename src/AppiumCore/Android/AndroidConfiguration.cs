@@ -7,12 +7,8 @@ namespace AppiumCore.Android;
 public class AndroidConfiguration
 {
     private TimeSpan m_implicitWait;
-    private static readonly TimeSpan DEFAULT_TIMEOUT;
+    private static readonly TimeSpan DEFAULT_TIMEOUT = TimeSpan.FromSeconds(180);
 
-    static AndroidConfiguration()
-    {
-        DEFAULT_TIMEOUT = TimeSpan.FromSeconds(180);
-    }
     public AndroidConfiguration()
     {
         m_implicitWait = DEFAULT_TIMEOUT;
