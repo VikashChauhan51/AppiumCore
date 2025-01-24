@@ -1,4 +1,6 @@
 ﻿
+using OpenQA.Selenium;
+
 namespace AppiumCore.Test;
 
 [TestFixture(Platform.iOS)]
@@ -28,7 +30,7 @@ public class AppSetupTest
     [Test]
     public void SampleTest()
     {
-        app.FindElementById("app").Click();
+        app.FindElement(By.Id("app")).Click();
         Assert.Pass();
     }
 }

@@ -19,12 +19,7 @@ public interface IApp
      ScreenOrientation Orientation { get; set; }
      void SwitchToWebView();
      void SwitchToNativeApp();
-     IAppResult FindElementByAccessibilityId(string id);
-     IAppResult FindElementById(string id);
-     IAppResult FindElementByXPath(string locator);
-     IAppResult FindElementByName(string name);
-     IReadOnlyCollection<IAppResult> FindElementsByAccessibilityId(string id);
-     IReadOnlyCollection<IAppResult> FindElementsById(string id);
-     IReadOnlyCollection<IAppResult> FindElementsByXPath(string locator);
+     IAppResult FindElement(By by);
+     IReadOnlyCollection<IAppResult> FindElements(By by);
      object ExecuteScript(string command, params object[] args);
 }

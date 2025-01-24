@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Service;
-using System;
 
 namespace AppiumCore.Android;
 

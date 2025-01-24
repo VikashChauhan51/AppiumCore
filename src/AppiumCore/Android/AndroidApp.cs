@@ -41,7 +41,7 @@ public class AndroidApp : IApp
     public IDictionary<string, object> GetSystemBars() => driver.GetSystemBars();
     public void Lock() => driver.Lock();
     public void IsLocked() => driver.IsLocked();
-    public void Unlock(string key, string type) => driver.Unlock(key,type);
+    public void Unlock(string key, string type) => driver.Unlock(key, type);
     public void OpenNotifications() => driver.OpenNotifications();
     public string GetClipboardText() => driver.GetClipboardText();
     public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
@@ -51,32 +51,16 @@ public class AndroidApp : IApp
     public ConnectionType ConnectionType => driver.ConnectionType;
     public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
 
-    public IAppResult FindElementByAccessibilityId(string id)
+    public IAppResult FindElement(By by)
     {
-        var element = driver.FindElement(By.Id(id));
+        var element = driver.FindElement(by);
         return AndroidElementToAppResult(element);
     }
 
-    public IAppResult FindElementById(string id)
+    public IReadOnlyCollection<IAppResult> FindElements(By by)
     {
-        var element = driver.FindElement(By.Id(id));
-        return AndroidElementToAppResult(element);
-    }
-
-    public IReadOnlyCollection<IAppResult> FindElementsByXPath(string locator)
-    {
-        var elements = driver.FindElements(By.XPath(locator));
+        var elements = driver.FindElements(by);
         return GetAppResult(elements);
-    }
-    public IAppResult FindElementByXPath(string locator)
-    {
-        var element = driver.FindElement(By.XPath(locator));
-        return AndroidElementToAppResult(element);
-    }
-    public IAppResult FindElementByName(string name)
-    {
-        var element = driver.FindElement(By.Name(name));
-        return AndroidElementToAppResult(element);
     }
     public void SwitchToNativeApp()
     {
@@ -126,17 +110,7 @@ public class AndroidApp : IApp
         return result;
     }
 
-    public IReadOnlyCollection<IAppResult> FindElementsByAccessibilityId(string id)
-    {
-        var elements = driver.FindElements(By.Id(id));
-        return GetAppResult(elements);
-    }
 
-    public IReadOnlyCollection<IAppResult> FindElementsById(string id)
-    {
-        var elements = driver.FindElements(By.Id(id));
-        return GetAppResult(elements);
-    }
     public object ExecuteScript(string command, params object[] args)
     {
         return driver.ExecuteScript(command, args);

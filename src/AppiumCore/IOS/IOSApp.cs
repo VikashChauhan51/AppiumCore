@@ -34,39 +34,23 @@ public class IOSApp : IApp
     public bool IsServerRunning => localService.IsRunning;
     public void Lock() => driver.Lock();
     public void IsLocked() => driver.IsLocked();
-    public void Unlock(string key, string type) => driver.Unlock();    
+    public void Unlock(string key, string type) => driver.Unlock();
     public string GetClipboardText() => driver.GetClipboardText();
     public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
     public void HideKeyboard() => driver.HideKeyboard();
     public bool IsKeyboardShown() => driver.IsKeyboardShown();
     public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
 
-    public IAppResult FindElementByAccessibilityId(string id)
+    public IAppResult FindElement(By by)
     {
-        var element = driver.FindElement(By.Id(id));
+        var element = driver.FindElement(by);
         return iOSElementToAppResult(element);
     }
 
-    public IAppResult FindElementById(string id)
+    public IReadOnlyCollection<IAppResult> FindElements(By by)
     {
-        var element = driver.FindElement(By.Id(id));
-        return iOSElementToAppResult(element);
-    }
-
-    public IReadOnlyCollection<IAppResult> FindElementsByXPath(string locator)
-    {
-        var elements = driver.FindElements(By.XPath(locator));
+        var elements = driver.FindElements(by);
         return GetAppResult(elements);
-    }
-    public IAppResult FindElementByXPath(string locator)
-    {
-        var element = driver.FindElement(By.XPath(locator));
-        return iOSElementToAppResult(element);
-    }
-    public IAppResult FindElementByName(string name)
-    {
-        var element = driver.FindElement(By.Name(name));
-        return iOSElementToAppResult(element);
     }
 
     public void SwitchToNativeApp()
