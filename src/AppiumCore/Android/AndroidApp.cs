@@ -1,12 +1,13 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
+using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.Service;
 
 
 namespace AppiumCore.Android;
 
-public class AndroidApp : IApp
+public sealed class AndroidApp : IApp
 {
     public readonly AndroidDriver driver;
     public readonly AppiumLocalService localService;
@@ -44,12 +45,14 @@ public class AndroidApp : IApp
     public void Unlock(string key, string type) => driver.Unlock(key, type);
     public void OpenNotifications() => driver.OpenNotifications();
     public string GetClipboardText() => driver.GetClipboardText();
-    public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
+    public void SetClipboardText(string textContent, string label) => driver.SetClipboardText(textContent, label);
     public void SetSetting(string setting, object value) => driver.SetSetting(setting, value);
     public void HideKeyboard() => driver.HideKeyboard();
     public bool IsKeyboardShown() => driver.IsKeyboardShown();
     public ConnectionType ConnectionType => driver.ConnectionType;
     public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
+
+    public Dictionary<string, object> Settings => driver.Settings;
 
     public IAppResult FindElement(By by)
     {
@@ -75,6 +78,9 @@ public class AndroidApp : IApp
         driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("NATIVE_APP")));
     }
 
+    public void Lock(int? seconds = null) => driver.Lock(seconds);
+    public string GetClipboard(ClipboardContentType contentType) => driver.GetClipboard(contentType);
+    public void SetClipboard(ClipboardContentType contentType, string base64Content) => driver.SetClipboard(contentType, base64Content);
     public void SwitchToWebView()
     {
         // Wait for web appear

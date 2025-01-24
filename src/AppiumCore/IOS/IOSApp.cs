@@ -1,11 +1,12 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Appium.Service;
 
 namespace AppiumCore.IOS;
 
-public class IOSApp : IApp
+public sealed class IOSApp : IApp
 {
     public readonly IOSDriver driver;
     public readonly AppiumLocalService localService;
@@ -36,10 +37,12 @@ public class IOSApp : IApp
     public void IsLocked() => driver.IsLocked();
     public void Unlock(string key, string type) => driver.Unlock();
     public string GetClipboardText() => driver.GetClipboardText();
-    public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
+    public void SetClipboardText(string textContent, string label = null) => driver.SetClipboardText(textContent, label);
     public void HideKeyboard() => driver.HideKeyboard();
     public bool IsKeyboardShown() => driver.IsKeyboardShown();
     public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
+
+    public Dictionary<string, object> Settings => driver.Settings;
 
     public IAppResult FindElement(By by)
     {
@@ -115,4 +118,9 @@ public class IOSApp : IApp
     {
         return driver.ExecuteScript(command, args);
     }
+
+    public void Lock(int? seconds = null) =>driver.Lock(seconds);
+    public string GetClipboard(ClipboardContentType contentType)=>driver.GetClipboard(contentType);
+    public void SetClipboard(ClipboardContentType contentType, string base64Content)=>driver.SetClipboard(contentType, base64Content);
+    public void SetSetting(string setting, object value)=>driver.SetSetting(setting, value);
 }
