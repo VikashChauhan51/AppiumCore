@@ -4,8 +4,8 @@ using OpenQA.Selenium.Appium.Interfaces;
 
 namespace AppiumCore.Android;
 public interface IAndroidApp : IApp, IStartsActivity,
-        IHasNetworkConnection, INetworkActions, IHasClipboard, IHasPerformanceData,
+        IHasNetworkConnection, INetworkActions, IHasPerformanceData,
         ISendsKeyEvents,
-        IPushesFiles, IHasSettings
+        IPushesFiles
 {
 }

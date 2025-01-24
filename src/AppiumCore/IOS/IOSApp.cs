@@ -1,101 +1,49 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Appium;
+﻿using System.Drawing;
 using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Appium.Service;
 
 namespace AppiumCore.IOS;
 
-public sealed class IOSApp : IOSDriver, IIOSApp
+public sealed class IOSApp : AppBase, IIOSApp
 {
-    private readonly AppiumLocalService Service;
-    private const string NativeApp = "NATIVE_APP";
-    private const string WebApp = "WEBVIEW";
-    Uri? IApp.ServiceUrl => Service?.ServiceUrl;
-    bool IApp.IsServerRunning => Service?.IsRunning ?? false;
+    private readonly IOSDriver driver;
 
-    public Platform Platform => Platform.iOS;
+    public override Platform Platform => Platform.iOS;
 
-    public IOSApp(DriverOptions driverOptions) : base(driverOptions)
+    public override Dictionary<string, object> Settings { get => driver.Settings; set => driver.Settings = value; }
+
+    public IOSApp(AppiumLocalService Service, IOSDriver driver) : base(Service, driver)
     {
+        this.driver = driver;
     }
 
-    public IOSApp(ICommandExecutor commandExecutor, DriverOptions driverOptions) : base(commandExecutor, driverOptions)
+
+    public IOSApp(IOSDriver driver) : base(driver)
     {
+        this.driver = driver;
     }
 
-    public IOSApp(DriverOptions driverOptions, TimeSpan commandTimeout) : base(driverOptions, commandTimeout)
-    {
-    }
+    public void ShakeDevice() => driver.ShakeDevice();
 
-    public IOSApp(AppiumServiceBuilder builder, DriverOptions driverOptions) : base(builder, driverOptions)
-    {
-    }
+    public void PerformTouchID(bool match) => driver.PerformTouchID(match);
 
-    public IOSApp(Uri remoteAddress, DriverOptions driverOptions) : base(remoteAddress, driverOptions)
-    {
-    }
+    public override void SetClipboard(ClipboardContentType contentType, string base64Content) => driver.SetClipboard(contentType, base64Content);
 
-    public IOSApp(AppiumLocalService service, DriverOptions driverOptions) : base(service, driverOptions)
-    {
-        this.Service = service;
+    public override string GetClipboard(ClipboardContentType contentType) => driver.GetClipboard(contentType);
 
-    }
+    public override void SetClipboardText(string textContent, string label) => driver.SetClipboardText(textContent, label);
 
-    public IOSApp(AppiumServiceBuilder builder, DriverOptions driverOptions, TimeSpan commandTimeout) : base(builder, driverOptions, commandTimeout)
-    {
-    }
+    public override string GetClipboardText() => driver.GetClipboardText();
 
-    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout) : base(remoteAddress, driverOptions, commandTimeout)
-    {
-    }
+    public override void SetClipboardUrl(string url) => driver.SetClipboardUrl(url);
 
-    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout) : base(service, driverOptions, commandTimeout)
-    {
-        this.Service = service;
-    }
+    public override string GetClipboardUrl() => driver.GetClipboardUrl();
 
-    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, clientConfig)
-    {
-    }
+    public override void SetClipboardImage(Image image) => driver.SetClipboardImage(image);
 
-    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(service, driverOptions, clientConfig)
-    {
-        this.Service = service;
-    }
+    public override Image GetClipboardImage() => driver.GetClipboardImage();
+    public override void SetSetting(string setting, object value) => driver.SetSetting(setting, value);
 
-    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, commandTimeout, clientConfig)
-    {
-    }
-
-    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(service, driverOptions, commandTimeout, clientConfig)
-    {
-        this.Service = service;
-    }
-
-    public void SwitchToNativeApp()
-    {
-
-        // Wait for web appear
-        List<string> AllContexts = [];
-        foreach (var context in Contexts)
-        {
-            AllContexts.Add(context);
-        }
-        // Switch to web View
-        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(NativeApp));
-    }
-    public void SwitchToWebView()
-    {
-        // Wait for web appear
-        List<string> AllContexts = [];
-        foreach (var context in Contexts)
-        {
-
-            AllContexts.Add(context);
-        }
-        // Switch to web View
-        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(WebApp));
-    }
 
 }

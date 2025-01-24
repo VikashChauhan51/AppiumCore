@@ -38,8 +38,21 @@ public class AndroidConfiguration
             throw new ArgumentException("appium local server can't be null");
         }
 
-        driver = new AndroidApp(localService.ServiceUrl, appiumOptions, m_implicitWait);
+        driver = new AndroidDriver(localService, appiumOptions, m_implicitWait);
         driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
-        return (IAndroidApp)driver;
+        return new AndroidApp(localService, driver);
+    }
+
+    public IAndroidApp StartApp(AppiumOptions appiumOptions)
+    {
+        AndroidDriver driver;
+
+        if (appiumOptions == null)
+        {
+            throw new ArgumentException("appiumOptions can't be null");
+        }
+        driver = new AndroidDriver(appiumOptions, m_implicitWait);
+        driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
+        return new AndroidApp(driver);
     }
 }

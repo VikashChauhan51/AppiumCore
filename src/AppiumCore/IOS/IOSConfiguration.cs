@@ -38,8 +38,21 @@ public class IOSConfiguration
             throw new ArgumentException("appium local server can't be null");
         }
 
-        driver = new IOSApp(localService.ServiceUrl, appiumOptions, m_implicitWait);
+        driver = new IOSDriver(localService, appiumOptions, m_implicitWait);
         driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
-        return (IIOSApp)driver;
+        return new IOSApp(localService, driver);
+    }
+
+    public IIOSApp StartApp(AppiumOptions appiumOptions)
+    {
+        IOSDriver driver;
+
+        if (appiumOptions == null)
+        {
+            throw new ArgumentException("appiumOptions can't be null");
+        }
+        driver = new IOSDriver(appiumOptions, m_implicitWait);
+        driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
+        return new IOSApp(driver);
     }
 }
