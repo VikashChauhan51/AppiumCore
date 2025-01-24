@@ -1,14 +1,14 @@
-﻿using OpenQA.Selenium.Appium.Android;
+﻿using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Interactions.Internal;
-using System;
+
 using System.Drawing;
 
 namespace AppiumCore.Android;
 
 public class AndroidResult : IAppResult
 {
-    private readonly AndroidElement _element;
-    public AndroidResult(AndroidElement element)
+    private readonly AppiumElement _element;
+    public AndroidResult(AppiumElement element)
     {
         if (element == null)
         {

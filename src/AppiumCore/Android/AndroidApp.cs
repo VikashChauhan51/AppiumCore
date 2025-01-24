@@ -1,17 +1,16 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
 using OpenQA.Selenium.Appium.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+
 
 namespace AppiumCore.Android;
 
 public class AndroidApp : IApp
 {
-    public readonly AndroidDriver<AndroidElement> driver;
+    public readonly AndroidDriver driver;
     public readonly AppiumLocalService localService;
-    public AndroidApp(AndroidDriver<AndroidElement> driver, AppiumLocalService localService)
+    public AndroidApp(AndroidDriver driver, AppiumLocalService localService)
     {
         if (driver == null)
         {
@@ -42,7 +41,7 @@ public class AndroidApp : IApp
     public IDictionary<string, object> GetSystemBars() => driver.GetSystemBars();
     public void Lock() => driver.Lock();
     public void IsLocked() => driver.IsLocked();
-    public void Unlock() => driver.Unlock();
+    public void Unlock(string key, string type) => driver.Unlock(key,type);
     public void OpenNotifications() => driver.OpenNotifications();
     public string GetClipboardText() => driver.GetClipboardText();
     public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
@@ -54,29 +53,29 @@ public class AndroidApp : IApp
 
     public IAppResult FindElementByAccessibilityId(string id)
     {
-        var element = driver.FindElementByAccessibilityId(id);
+        var element = driver.FindElement(By.Id(id));
         return AndroidElementToAppResult(element);
     }
 
     public IAppResult FindElementById(string id)
     {
-        var element = driver.FindElementById(id);
+        var element = driver.FindElement(By.Id(id));
         return AndroidElementToAppResult(element);
     }
 
     public IReadOnlyCollection<IAppResult> FindElementsByXPath(string locator)
     {
-        var elements = driver.FindElementsByXPath(locator);
+        var elements = driver.FindElements(By.XPath(locator));
         return GetAppResult(elements);
     }
     public IAppResult FindElementByXPath(string locator)
     {
-        var element = driver.FindElementByXPath(locator);
+        var element = driver.FindElement(By.XPath(locator));
         return AndroidElementToAppResult(element);
     }
     public IAppResult FindElementByName(string name)
     {
-        var element = driver.FindElementByName(name);
+        var element = driver.FindElement(By.Name(name));
         return AndroidElementToAppResult(element);
     }
     public void SwitchToNativeApp()
@@ -105,7 +104,7 @@ public class AndroidApp : IApp
         driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("WEBVIEW")));
     }
 
-    private IAppResult AndroidElementToAppResult(AndroidElement element)
+    private IAppResult AndroidElementToAppResult(AppiumElement element)
     {
         if (element == null)
             return null;
@@ -113,12 +112,12 @@ public class AndroidApp : IApp
         return new AndroidResult(element);
 
     }
-    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<AndroidElement> elements)
+    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<AppiumElement> elements)
     {
         List<IAppResult> result = new List<IAppResult>();
         if (elements != null && elements.Count > 0)
         {
-            foreach (AndroidElement item in elements)
+            foreach (AppiumElement item in elements)
             {
                 if (item != null)
                     result.Add(AndroidElementToAppResult(item));
@@ -129,13 +128,13 @@ public class AndroidApp : IApp
 
     public IReadOnlyCollection<IAppResult> FindElementsByAccessibilityId(string id)
     {
-        var elements = driver.FindElementsByAccessibilityId(id);
+        var elements = driver.FindElements(By.Id(id));
         return GetAppResult(elements);
     }
 
     public IReadOnlyCollection<IAppResult> FindElementsById(string id)
     {
-        var elements = driver.FindElementsById(id);
+        var elements = driver.FindElements(By.Id(id));
         return GetAppResult(elements);
     }
     public object ExecuteScript(string command, params object[] args)

@@ -1,14 +1,13 @@
-﻿using OpenQA.Selenium.Appium.iOS;
+﻿using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Interactions.Internal;
-using System;
 using System.Drawing;
 
 namespace AppiumCore.IOS;
 
 public class IOSResult : IAppResult
 {
-    private readonly IOSElement _element;
-    public IOSResult(IOSElement element)
+    private readonly AppiumElement _element;
+    public IOSResult(AppiumElement element)
     {
         if (element == null)
         {

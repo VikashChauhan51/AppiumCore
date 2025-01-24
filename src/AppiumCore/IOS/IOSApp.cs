@@ -1,17 +1,15 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Appium.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace AppiumCore.IOS;
 
 public class IOSApp : IApp
 {
-    public readonly IOSDriver<IOSElement> driver;
+    public readonly IOSDriver driver;
     public readonly AppiumLocalService localService;
-    public IOSApp(IOSDriver<IOSElement> driver, AppiumLocalService localService)
+    public IOSApp(IOSDriver driver, AppiumLocalService localService)
     {
         if (driver == null)
         {
@@ -36,7 +34,7 @@ public class IOSApp : IApp
     public bool IsServerRunning => localService.IsRunning;
     public void Lock() => driver.Lock();
     public void IsLocked() => driver.IsLocked();
-    public void Unlock() => driver.Unlock();
+    public void Unlock(string key, string type) => driver.Unlock();    
     public string GetClipboardText() => driver.GetClipboardText();
     public void SetClipboardText(string text, string label) => driver.SetClipboardText(text, label);
     public void HideKeyboard() => driver.HideKeyboard();
@@ -45,29 +43,29 @@ public class IOSApp : IApp
 
     public IAppResult FindElementByAccessibilityId(string id)
     {
-        var element = driver.FindElementByAccessibilityId(id);
+        var element = driver.FindElement(By.Id(id));
         return iOSElementToAppResult(element);
     }
 
     public IAppResult FindElementById(string id)
     {
-        var element = driver.FindElementById(id);
+        var element = driver.FindElement(By.Id(id));
         return iOSElementToAppResult(element);
     }
 
     public IReadOnlyCollection<IAppResult> FindElementsByXPath(string locator)
     {
-        var elements = driver.FindElementsByXPath(locator);
+        var elements = driver.FindElements(By.XPath(locator));
         return GetAppResult(elements);
     }
     public IAppResult FindElementByXPath(string locator)
     {
-        var element = driver.FindElementByXPath(locator);
+        var element = driver.FindElement(By.XPath(locator));
         return iOSElementToAppResult(element);
     }
     public IAppResult FindElementByName(string name)
     {
-        var element = driver.FindElementByName(name);
+        var element = driver.FindElement(By.Name(name));
         return iOSElementToAppResult(element);
     }
 
@@ -96,7 +94,7 @@ public class IOSApp : IApp
         driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("WEBVIEW")));
     }
 
-    private IAppResult iOSElementToAppResult(IOSElement element)
+    private IAppResult iOSElementToAppResult(AppiumElement element)
     {
         if (element == null)
             return null;
@@ -104,12 +102,12 @@ public class IOSApp : IApp
         return new IOSResult(element);
 
     }
-    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<IOSElement> elements)
+    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<AppiumElement> elements)
     {
         List<IAppResult> result = new List<IAppResult>();
         if (elements != null && elements.Count > 0)
         {
-            foreach (IOSElement item in elements)
+            foreach (AppiumElement item in elements)
             {
                 if (item != null)
                     result.Add(iOSElementToAppResult(item));
@@ -120,13 +118,13 @@ public class IOSApp : IApp
 
     public IReadOnlyCollection<IAppResult> FindElementsByAccessibilityId(string id)
     {
-        var elements = driver.FindElementsByAccessibilityId(id);
+        var elements = driver.FindElements(By.Id(id));
         return GetAppResult(elements);
     }
 
     public IReadOnlyCollection<IAppResult> FindElementsById(string id)
     {
-        var elements = driver.FindElementsById(id);
+        var elements = driver.FindElements(By.Id(id));
         return GetAppResult(elements);
     }
     public object ExecuteScript(string command, params object[] args)

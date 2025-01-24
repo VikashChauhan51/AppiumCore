@@ -11,7 +11,7 @@ public interface IApp
      bool IsServerRunning { get; }
      void Lock();
      void IsLocked();
-     void Unlock();
+     void Unlock(string key, string type);
      string GetClipboardText();
      void SetClipboardText(string text, string label);
      void HideKeyboard();

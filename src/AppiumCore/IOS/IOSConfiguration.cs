@@ -28,7 +28,7 @@ public class IOSConfiguration
 
     public IOSApp StartApp(AppiumOptions appiumOptions, AppiumLocalService localService)
     {
-        IOSDriver<IOSElement> driver;
+        IOSDriver driver;
 
         if (appiumOptions == null)
         {
@@ -39,7 +39,7 @@ public class IOSConfiguration
             throw new ArgumentException("appium local server can't be null");
         }
 
-        driver = new IOSDriver<IOSElement>(localService.ServiceUrl, appiumOptions, m_implicitWait);
+        driver = new IOSDriver(localService.ServiceUrl, appiumOptions, m_implicitWait);
         driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
         return new IOSApp(driver, localService);
     }
