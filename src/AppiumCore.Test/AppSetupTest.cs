@@ -31,7 +31,7 @@ public class AppSetupTest
     [Test]
     public void SampleTest()
     {
-        ((AndroidApp)app).FindElement(By.Id("app")).Click();
+        app.FindElement(By.Id("app")).Click();
         Assert.Pass();
     }
 }

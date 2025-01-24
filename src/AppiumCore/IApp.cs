@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using System.Collections.ObjectModel;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Interfaces;
 
@@ -9,9 +10,12 @@ public interface IApp : IHasSessionDetails,
         IHidesKeyboard, IInteractsWithFiles, IFindsByFluentSelector<AppiumElement>,
         IInteractsWithApps, IRotatable, IContextAware
 {
-     void SwitchToWebView();
-     void SwitchToNativeApp();
+    void SwitchToWebView();
+    void SwitchToNativeApp();
 
     Uri? ServiceUrl { get; }
     bool IsServerRunning { get; }
+
+    AppiumElement FindElement(By by);
+    ReadOnlyCollection<AppiumElement> FindElements(By by);
 }
