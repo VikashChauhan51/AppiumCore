@@ -1,7 +1,6 @@
 ﻿using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.iOS;
 using OpenQA.Selenium.Appium.Service;
-using System;
 
 namespace AppiumCore.IOS;
 
@@ -26,7 +25,7 @@ public class IOSConfiguration
     }
 
 
-    public IOSApp StartApp(AppiumOptions appiumOptions, AppiumLocalService localService)
+    public IIOSApp StartApp(AppiumOptions appiumOptions, AppiumLocalService localService)
     {
         IOSDriver driver;
 
@@ -39,8 +38,8 @@ public class IOSConfiguration
             throw new ArgumentException("appium local server can't be null");
         }
 
-        driver = new IOSDriver(localService.ServiceUrl, appiumOptions, m_implicitWait);
+        driver = new IOSApp(localService.ServiceUrl, appiumOptions, m_implicitWait);
         driver.Manage().Timeouts().ImplicitWait = m_implicitWait;
-        return new IOSApp(driver, localService);
+        return (IIOSApp)driver;
     }
 }

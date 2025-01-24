@@ -1,4 +1,5 @@
 ﻿
+using AppiumCore.Android;
 using OpenQA.Selenium;
 
 namespace AppiumCore.Test;
@@ -30,7 +31,7 @@ public class AppSetupTest
     [Test]
     public void SampleTest()
     {
-        app.FindElement(By.Id("app")).Click();
+        ((AndroidApp)app).FindElement(By.Id("app")).Click();
         Assert.Pass();
     }
 }

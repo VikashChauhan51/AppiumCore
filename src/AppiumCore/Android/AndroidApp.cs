@@ -1,124 +1,94 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Appium;
 using OpenQA.Selenium.Appium.Android;
-using OpenQA.Selenium.Appium.Enums;
 using OpenQA.Selenium.Appium.Service;
 
 
 namespace AppiumCore.Android;
 
-public sealed class AndroidApp : IApp
+public sealed class AndroidApp : AndroidDriver, IAndroidApp
 {
-    public readonly AndroidDriver driver;
-    public readonly AppiumLocalService localService;
-    public AndroidApp(AndroidDriver driver, AppiumLocalService localService)
+    private readonly AppiumLocalService Service;
+    private const string NativeApp = "NATIVE_APP";
+    private const string WebApp = "WEBVIEW";
+    Uri? IApp.ServiceUrl => Service?.ServiceUrl;
+    bool IApp.IsServerRunning => Service?.IsRunning ?? false;
+    public AndroidApp(DriverOptions driverOptions) : base(driverOptions)
     {
-        if (driver == null)
-        {
-            throw new ArgumentNullException(nameof(driver));
-        }
-        if (localService == null)
-        {
-            throw new ArgumentNullException(nameof(localService));
-        }
-        this.driver = driver;
-        this.localService = localService;
     }
 
-    public Platform Platform => Platform.Android;
-
-    public string Context { get => driver.Context; set => driver.Context = value; }
-
-    public string PageSource => driver.PageSource;
-
-    public Uri ServiceUrl => localService.ServiceUrl;
-
-    public bool IsServerRunning => localService.IsRunning;
-
-    public void ToggleData() => driver.ToggleData();
-    public void ToggleWifi() => driver.ToggleWifi();
-    public void ToggleAirplaneMode() => driver.ToggleAirplaneMode();
-    public void ToggleLocationServices() => driver.ToggleLocationServices();
-    public IDictionary<string, object> GetSystemBars() => driver.GetSystemBars();
-    public void Lock() => driver.Lock();
-    public void IsLocked() => driver.IsLocked();
-    public void Unlock(string key, string type) => driver.Unlock(key, type);
-    public void OpenNotifications() => driver.OpenNotifications();
-    public string GetClipboardText() => driver.GetClipboardText();
-    public void SetClipboardText(string textContent, string label) => driver.SetClipboardText(textContent, label);
-    public void SetSetting(string setting, object value) => driver.SetSetting(setting, value);
-    public void HideKeyboard() => driver.HideKeyboard();
-    public bool IsKeyboardShown() => driver.IsKeyboardShown();
-    public ConnectionType ConnectionType => driver.ConnectionType;
-    public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
-
-    public Dictionary<string, object> Settings => driver.Settings;
-
-    public IAppResult FindElement(By by)
+    public AndroidApp(ICommandExecutor commandExecutor, DriverOptions driverOptions) : base(commandExecutor, driverOptions)
     {
-        var element = driver.FindElement(by);
-        return AndroidElementToAppResult(element);
     }
 
-    public IReadOnlyCollection<IAppResult> FindElements(By by)
+    public AndroidApp(DriverOptions driverOptions, TimeSpan commandTimeout) : base(driverOptions, commandTimeout)
     {
-        var elements = driver.FindElements(by);
-        return GetAppResult(elements);
+    }
+
+    public AndroidApp(AppiumServiceBuilder builder, DriverOptions driverOptions) : base(builder, driverOptions)
+    {
+    }
+
+    public AndroidApp(Uri remoteAddress, DriverOptions driverOptions) : base(remoteAddress, driverOptions)
+    {
+    }
+
+    public AndroidApp(AppiumLocalService service, DriverOptions driverOptions) : base(service, driverOptions)
+    {
+        this.Service = service;
+    }
+
+    public AndroidApp(AppiumServiceBuilder builder, DriverOptions driverOptions, TimeSpan commandTimeout) : base(builder, driverOptions, commandTimeout)
+    {
+    }
+
+    public AndroidApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout) : base(remoteAddress, driverOptions, commandTimeout)
+    {
+    }
+
+    public AndroidApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout) : base(service, driverOptions, commandTimeout)
+    {
+        this.Service = service;
+    }
+
+    public AndroidApp(Uri remoteAddress, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, clientConfig)
+    {
+    }
+
+    public AndroidApp(AppiumLocalService service, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(service, driverOptions, clientConfig)
+    {
+        this.Service = service;
+    }
+
+    public AndroidApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, commandTimeout, clientConfig)
+    {
+    }
+
+    public AndroidApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(service, driverOptions, commandTimeout, clientConfig)
+    {
+        this.Service = service;
     }
     public void SwitchToNativeApp()
     {
 
         // Wait for web appear
-        List<string> AllContexts = new List<string>();
-        foreach (var context in (driver.Contexts))
+        List<string> AllContexts = [];
+        foreach (var context in Contexts)
         {
             AllContexts.Add(context);
         }
         // Switch to web View
-        driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("NATIVE_APP")));
+        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(NativeApp));
     }
-
-    public void Lock(int? seconds = null) => driver.Lock(seconds);
-    public string GetClipboard(ClipboardContentType contentType) => driver.GetClipboard(contentType);
-    public void SetClipboard(ClipboardContentType contentType, string base64Content) => driver.SetClipboard(contentType, base64Content);
     public void SwitchToWebView()
     {
         // Wait for web appear
-        List<string> AllContexts = new List<string>();
-        foreach (var context in (driver.Contexts))
+        List<string> AllContexts = [];
+        foreach (var context in Contexts)
         {
 
             AllContexts.Add(context);
         }
         // Switch to web View
-        driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("WEBVIEW")));
-    }
-
-    private IAppResult AndroidElementToAppResult(AppiumElement element)
-    {
-        if (element == null)
-            return null;
-
-        return new AndroidResult(element);
-
-    }
-    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<AppiumElement> elements)
-    {
-        List<IAppResult> result = new List<IAppResult>();
-        if (elements != null && elements.Count > 0)
-        {
-            foreach (AppiumElement item in elements)
-            {
-                if (item != null)
-                    result.Add(AndroidElementToAppResult(item));
-            }
-        }
-        return result;
-    }
-
-
-    public object ExecuteScript(string command, params object[] args)
-    {
-        return driver.ExecuteScript(command, args);
+        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(WebApp));
     }
 }

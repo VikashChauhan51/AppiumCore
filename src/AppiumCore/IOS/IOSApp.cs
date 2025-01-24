@@ -6,121 +6,95 @@ using OpenQA.Selenium.Appium.Service;
 
 namespace AppiumCore.IOS;
 
-public sealed class IOSApp : IApp
+public sealed class IOSApp : IOSDriver, IIOSApp
 {
-    public readonly IOSDriver driver;
-    public readonly AppiumLocalService localService;
-    public IOSApp(IOSDriver driver, AppiumLocalService localService)
+    private readonly AppiumLocalService Service;
+    private const string NativeApp = "NATIVE_APP";
+    private const string WebApp = "WEBVIEW";
+    Uri? IApp.ServiceUrl => Service?.ServiceUrl;
+    bool IApp.IsServerRunning => Service?.IsRunning ?? false;
+
+
+    public IOSApp(DriverOptions driverOptions) : base(driverOptions)
     {
-        if (driver == null)
-        {
-            throw new ArgumentNullException(nameof(driver));
-        }
-        if (localService == null)
-        {
-            throw new ArgumentNullException(nameof(localService));
-        }
-
-        this.driver = driver;
-        this.localService = localService;
-
-    }
-    public Platform Platform => Platform.iOS;
-    public string Context { get => driver.Context; set => driver.Context = value; }
-
-    public string PageSource => driver.PageSource;
-
-    public Uri ServiceUrl => localService.ServiceUrl;
-
-    public bool IsServerRunning => localService.IsRunning;
-    public void Lock() => driver.Lock();
-    public void IsLocked() => driver.IsLocked();
-    public void Unlock(string key, string type) => driver.Unlock();
-    public string GetClipboardText() => driver.GetClipboardText();
-    public void SetClipboardText(string textContent, string label = null) => driver.SetClipboardText(textContent, label);
-    public void HideKeyboard() => driver.HideKeyboard();
-    public bool IsKeyboardShown() => driver.IsKeyboardShown();
-    public ScreenOrientation Orientation { get => driver.Orientation; set => driver.Orientation = value; }
-
-    public Dictionary<string, object> Settings => driver.Settings;
-
-    public IAppResult FindElement(By by)
-    {
-        var element = driver.FindElement(by);
-        return iOSElementToAppResult(element);
     }
 
-    public IReadOnlyCollection<IAppResult> FindElements(By by)
+    public IOSApp(ICommandExecutor commandExecutor, DriverOptions driverOptions) : base(commandExecutor, driverOptions)
     {
-        var elements = driver.FindElements(by);
-        return GetAppResult(elements);
+    }
+
+    public IOSApp(DriverOptions driverOptions, TimeSpan commandTimeout) : base(driverOptions, commandTimeout)
+    {
+    }
+
+    public IOSApp(AppiumServiceBuilder builder, DriverOptions driverOptions) : base(builder, driverOptions)
+    {
+    }
+
+    public IOSApp(Uri remoteAddress, DriverOptions driverOptions) : base(remoteAddress, driverOptions)
+    {
+    }
+
+    public IOSApp(AppiumLocalService service, DriverOptions driverOptions) : base(service, driverOptions)
+    {
+        this.Service = service;
+
+    }
+
+    public IOSApp(AppiumServiceBuilder builder, DriverOptions driverOptions, TimeSpan commandTimeout) : base(builder, driverOptions, commandTimeout)
+    {
+    }
+
+    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout) : base(remoteAddress, driverOptions, commandTimeout)
+    {
+    }
+
+    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout) : base(service, driverOptions, commandTimeout)
+    {
+        this.Service = service;
+    }
+
+    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, clientConfig)
+    {
+    }
+
+    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, AppiumClientConfig clientConfig) : base(service, driverOptions, clientConfig)
+    {
+        this.Service = service;
+    }
+
+    public IOSApp(Uri remoteAddress, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(remoteAddress, driverOptions, commandTimeout, clientConfig)
+    {
+    }
+
+    public IOSApp(AppiumLocalService service, DriverOptions driverOptions, TimeSpan commandTimeout, AppiumClientConfig clientConfig) : base(service, driverOptions, commandTimeout, clientConfig)
+    {
+        this.Service = service;
     }
 
     public void SwitchToNativeApp()
     {
+
         // Wait for web appear
-        List<string> AllContexts = new List<string>();
-        foreach (var context in (driver.Contexts))
+        List<string> AllContexts = [];
+        foreach (var context in Contexts)
         {
             AllContexts.Add(context);
         }
         // Switch to web View
-        driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("NATIVE_APP")));
+        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(NativeApp));
     }
-
     public void SwitchToWebView()
     {
         // Wait for web appear
-        List<string> AllContexts = new List<string>();
-        foreach (var context in (driver.Contexts))
+        List<string> AllContexts = [];
+        foreach (var context in Contexts)
         {
 
             AllContexts.Add(context);
         }
         // Switch to web View
-        driver.Context = (AllContexts.FirstOrDefault(stringToCheck => stringToCheck.Contains("WEBVIEW")));
+        this.Context = AllContexts.Find(stringToCheck => stringToCheck.Contains(WebApp));
     }
 
-    private IAppResult iOSElementToAppResult(AppiumElement element)
-    {
-        if (element == null)
-            return null;
-
-        return new IOSResult(element);
-
-    }
-    private IReadOnlyCollection<IAppResult> GetAppResult(IReadOnlyCollection<AppiumElement> elements)
-    {
-        List<IAppResult> result = new List<IAppResult>();
-        if (elements != null && elements.Count > 0)
-        {
-            foreach (AppiumElement item in elements)
-            {
-                if (item != null)
-                    result.Add(iOSElementToAppResult(item));
-            }
-        }
-        return result;
-    }
-
-    public IReadOnlyCollection<IAppResult> FindElementsByAccessibilityId(string id)
-    {
-        var elements = driver.FindElements(By.Id(id));
-        return GetAppResult(elements);
-    }
-
-    public IReadOnlyCollection<IAppResult> FindElementsById(string id)
-    {
-        var elements = driver.FindElements(By.Id(id));
-        return GetAppResult(elements);
-    }
-    public object ExecuteScript(string command, params object[] args)
-    {
-        return driver.ExecuteScript(command, args);
-    }
-
-    public void Lock(int? seconds = null) =>driver.Lock(seconds);
-    public string GetClipboard(ClipboardContentType contentType)=>driver.GetClipboard(contentType);
-    public void SetClipboard(ClipboardContentType contentType, string base64Content)=>driver.SetClipboard(contentType, base64Content);
-    public void SetSetting(string setting, object value)=>driver.SetSetting(setting, value);
 }
