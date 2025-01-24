@@ -14,6 +14,7 @@ public sealed class IOSApp : IOSDriver, IIOSApp
     Uri? IApp.ServiceUrl => Service?.ServiceUrl;
     bool IApp.IsServerRunning => Service?.IsRunning ?? false;
 
+    public Platform Platform => Platform.iOS;
 
     public IOSApp(DriverOptions driverOptions) : base(driverOptions)
     {

@@ -12,6 +12,9 @@ public sealed class AndroidApp : AndroidDriver, IAndroidApp
     private const string WebApp = "WEBVIEW";
     Uri? IApp.ServiceUrl => Service?.ServiceUrl;
     bool IApp.IsServerRunning => Service?.IsRunning ?? false;
+
+    public Platform Platform => Platform.Android;
+
     public AndroidApp(DriverOptions driverOptions) : base(driverOptions)
     {
     }

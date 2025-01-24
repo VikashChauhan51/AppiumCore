@@ -12,7 +12,7 @@ public interface IApp : IHasSessionDetails,
 {
     void SwitchToWebView();
     void SwitchToNativeApp();
-
+    Platform Platform { get; }
     Uri? ServiceUrl { get; }
     bool IsServerRunning { get; }
 
