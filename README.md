@@ -11,6 +11,19 @@ This is a [Appium](https://appium.io/docs/en/latest/) client wrapper to test cro
 [![Build Status](https://github.com/VikashChauhan51/AppiumCore/actions/workflows/build.yml/badge.svg)](https://github.com/VikashChauhan51/AppiumCore/actions)
 [![License](https://img.shields.io/github/license/VikashChauhan51/AppiumCore.svg?style=flat-square)](https://github.com/VikashChauhan51/AppiumCore/blob/main/LICENSE)
 
+  ## Installation
+
+You can install the AppiumCore package via NuGet:
+
+```shell
+dotnet add package AppiumCore
+```
+
+Or you can use the NuGet Package Manager:
+
+```shell
+Install-Package AppiumCore
+```
 
 ## Quick Start Example (Nunit Framework):
 
