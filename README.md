@@ -40,15 +40,26 @@ public class AppSetupTest
 
     }
 
-    [Test]
+   [Test]
     public void SampleTest()
     {
-        app.FindElementById("app").Click();
+        app.FindElement(By.Id("app")).Click();
         Assert.Pass();
     }
 }
 
 ```
+
+*Here `SampleTest()` will execute on both `iOS` and `Android`, and `app.FindElement(By.Id("app")).Click()` will internally switch to the respective driver as we configured at startup.*
+
+This will reduce your codebase size and maintenance cost. 😊
+
+
+We have three interfaces: `IApp`, `IAndroidApp`, and `IIOSApp`. The `IApp` interface provides common APIs available in the Appium driver for both platforms, and the platform-specific interfaces provide complete platform-specific APIs available in the respective platform-specific drivers.
+
+
+Please use `AppiumLocalService` at startup if your mobile app is hybrid, where the application redirects to a web browser for functionalities like signup/sign-in. In this case, the app will switch from Native view to Web view. We have also added an additional APIs(`SwitchToWebView()` and `SwitchToNativeApp()`) to handle this in your script before calling any action method of the APIs. For documentation, please refer to their official documentation, as linked below.
+
 
 ## Reference
 - Inspired from [Xamarin.UITest](https://learn.microsoft.com/en-us/appcenter/test-cloud/frameworks/uitest/).
