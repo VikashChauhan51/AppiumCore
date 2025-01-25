@@ -1,10 +1,15 @@
 # AppiumCore
 
 ![Appium](appium-logo-horiz.png)
-      
+
 ![AppiumCore](icon.png)
 
 This is a [Appium](https://appium.io/docs/en/latest/) client wrapper to test cross platform mobile application with same code base using C#.
+
+[![NuGet Version](https://img.shields.io/nuget/v/AppiumCore.svg?style=flat-square)](https://www.nuget.org/packages/AppiumCore/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/AppiumCore.svg?style=flat-square)](https://www.nuget.org/packages/AppiumCore/)
+[![Build Status](https://github.com/VikashChauhan51/AppiumCore/actions/workflows/build.yml/badge.svg)](https://github.com/VikashChauhan51/AppiumCore/actions)
+[![License](https://img.shields.io/github/license/VikashChauhan51/AppiumCore.svg?style=flat-square)](https://github.com/VikashChauhan51/AppiumCore/blob/main/LICENSE)
 
 
 ## Quick Start Example (Nunit Framework):
