@@ -1,5 +1,10 @@
 # AppiumCore
-This is a Appium wrapper to test cross platform mobile application with same code base using Appium C#.
+
+![Appium](appium-logo-horiz.png)
+      
+![AppiumCore](icon.png)
+
+This is a [Appium](https://appium.io/docs/en/latest/) client wrapper to test cross platform mobile application with same code base using C#.
 
 
 ## Quick Start Example (Nunit Framework):
@@ -47,3 +52,4 @@ public class AppSetupTest
 
 ## Reference
 - Inspired from [Xamarin.UITest](https://learn.microsoft.com/en-us/appcenter/test-cloud/frameworks/uitest/).
+- [Appium Dotnet](https://appium.io/docs/en/latest/quickstart/test-dotnet/).
